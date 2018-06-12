@@ -1,7 +1,7 @@
 const Product = require('../models/Product');
 
 function index(req,res){
-    Product.find({})
+    Product.paginate({},{page: req.query.page || 1, limit: 8})
            .then(products => {
                if(products.length == 0) return res.send({Message: 'No Content'}).status(204);
                return res.status(200).send({products});
@@ -13,8 +13,8 @@ function show(req,res){
     let _id = req.params.id;
     Product.findOne({_id})
            .then(product => {
-            if(product) return res.status(200).send({product});
-            return res.status(404).send({error: 'NOT FOUND'});
+                if(product) return res.status(200).send({product});
+                return res.status(404).send({error: 'NOT FOUND'});
            })
            .catch(err => res.status(500).send({err}));
 }
